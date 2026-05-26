@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/takuro-inoue1913/github-repo-search/actions/workflows/ci.yml/badge.svg)](https://github.com/takuro-inoue1913/github-repo-search/actions/workflows/ci.yml)
 
-GitHub のリポジトリを検索・閲覧できる Web アプリケーション。Next.js (App Router) で実装した技術課題提出物。
+GitHub のリポジトリを検索・閲覧できる Web アプリケーション。
 
 > 設計の詳細は [DESIGN.md](./DESIGN.md) を参照してください。
 
