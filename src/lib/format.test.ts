@@ -26,32 +26,29 @@ describe("formatCount", () => {
 describe("formatRelativeDate", () => {
   const now = new Date("2026-05-26T12:00:00Z");
 
-  it("59 秒以内は秒単位の相対表記", () => {
+  it("数十秒前は秒単位の相対表記", () => {
     const iso = new Date(now.getTime() - 30 * 1000).toISOString();
     expect(formatRelativeDate(iso, now)).toMatch(/秒/);
   });
 
-  it("1 時間未満は分単位", () => {
+  it("数十分前は分単位の相対表記", () => {
     const iso = new Date(now.getTime() - 30 * 60 * 1000).toISOString();
     expect(formatRelativeDate(iso, now)).toMatch(/分/);
   });
 
-  it("1 日未満は時間単位", () => {
+  it("数時間前は時間単位の相対表記", () => {
     const iso = new Date(now.getTime() - 3 * 3600 * 1000).toISOString();
     expect(formatRelativeDate(iso, now)).toMatch(/時間/);
   });
 
-  it("30 日未満は日単位", () => {
+  it("数日前は日単位の相対表記", () => {
     const iso = new Date(now.getTime() - 5 * 86400 * 1000).toISOString();
-    expect(formatRelativeDate(iso, now)).toMatch(/日/);
+    expect(formatRelativeDate(iso, now)).toMatch(/日前/);
   });
 
-  it("30 日以上は絶対日付に切り替える", () => {
+  it("30 日以上前は YYYY/MM/DD の絶対日付", () => {
     const iso = new Date(now.getTime() - 365 * 86400 * 1000).toISOString();
-    const v = formatRelativeDate(iso, now);
-    // 「2025」の年表記を含み、相対表記の「前」を含まない
-    expect(v).toMatch(/2025/);
-    expect(v).not.toMatch(/前/);
+    expect(formatRelativeDate(iso, now)).toMatch(/^\d{4}\/\d{2}\/\d{2}$/);
   });
 
   it("不正な ISO 文字列は入力をそのまま返す", () => {

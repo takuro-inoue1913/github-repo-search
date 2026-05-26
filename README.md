@@ -364,15 +364,16 @@ CI(GitHub Actions)で `format:check / lint / typecheck / unit-test / build / e2e
 
 ### 国際化・表記の堅牢化
 
-- 日付: `Intl.RelativeTimeFormat` で「3 日前」、それ以上は `Intl.DateTimeFormat` で日付表示。
+- 日付: `dayjs` + `relativeTime` プラグイン + `ja` locale で「3 日前」、30 日以上前は `YYYY/MM/DD` の絶対日付に切り替える。
 - 数値: `Intl.NumberFormat` で `1,234`、1,000 以上は `compact` 表記で `1.2万` 等に。
 
-**dayjs / date-fns ではなく `Intl` を採用した理由**:
+**日付ライブラリの選定**:
 
-- **依存ゼロ**: ブラウザ・Node に標準搭載。バンドルサイズ増加なし。
-- **i18n が無料**: ロケール差し替えで他言語へ移行できる(`dayjs` は locale を都度 import する必要がある)。
-- **用途が局所的**: 「更新日の相対表記」と「件数の短縮表記」の 2 ヶ所に閉じており、ライブラリ導入コストに見合わない。
-- **判断の更新条件**: 日付演算(加算・差分・タイムゾーン変換)をアプリ全体で多用するようになる / 「N か月前」「来週」のような表現分岐が増えて `lib/format.ts` が肥大化する、いずれかが満たされた段階で `dayjs` または `date-fns` への移行を検討する。
+- **dayjs を採用**: 軽量(~7KB)、API がシンプル、`relativeTime` プラグインで「N 日前」を一行で書ける。`locale` も import 一行で切り替え可能。
+- **`Intl.RelativeTimeFormat` 直接利用は不採用**: 動くが、閾値分岐(秒・分・時間・日)を自前で書く必要があり、後から保守する人にとって意図が読み取りにくい。
+- **`date-fns` は不採用**: 関数型 API でツリーシェイクは強いが、locale import や `formatDistance` のオプション設計が dayjs より冗長。今回の規模では dayjs の素直さを取った。
+
+**数値フォーマットに `Intl.NumberFormat` を残した理由**: 数値の桁区切り・compact 表記は標準 API で十分かつ簡潔。dayjs の領域でもないので、わざわざ別ライブラリを足す必要はない。
 
 ### 観測性(注入点)
 
