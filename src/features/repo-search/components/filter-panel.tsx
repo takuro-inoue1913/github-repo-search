@@ -1,15 +1,18 @@
 "use client";
 
 import type { SearchOrder, SearchSort } from "@/types/repository";
+import { PER_PAGE_OPTIONS } from "../hooks/use-repo-search-query";
 
 type Props = {
   language: string | undefined;
   sort: SearchSort | undefined;
   order: SearchOrder | undefined;
+  perPage: number;
   onChange: (next: {
     language?: string | undefined;
     sort?: SearchSort | undefined;
     order?: SearchOrder | undefined;
+    perPage?: number;
   }) => void;
 };
 
@@ -24,7 +27,7 @@ const LANGUAGES = [
   "C++",
 ];
 
-export function FilterPanel({ language, sort, order, onChange }: Props) {
+export function FilterPanel({ language, sort, order, perPage, onChange }: Props) {
   return (
     <div className="flex flex-wrap gap-3">
       <div className="flex flex-col gap-1">
@@ -78,6 +81,24 @@ export function FilterPanel({ language, sort, order, onChange }: Props) {
         >
           <option value="desc">降順</option>
           <option value="asc">昇順</option>
+        </select>
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <label htmlFor="filter-per-page" className="text-xs text-neutral-600">
+          表示件数
+        </label>
+        <select
+          id="filter-per-page"
+          value={perPage}
+          onChange={(e) => onChange({ perPage: Number(e.target.value) })}
+          className="rounded-md border border-neutral-300 bg-white px-2 py-1.5 text-sm text-neutral-900"
+        >
+          {PER_PAGE_OPTIONS.map((n) => (
+            <option key={n} value={n}>
+              {n} 件 / ページ
+            </option>
+          ))}
         </select>
       </div>
     </div>

@@ -7,7 +7,13 @@ import type { SearchOrder, SearchParams, SearchSort } from "@/types/repository";
 const SORTS = new Set<SearchSort>(["stars", "forks", "updated", "best-match"]);
 const ORDERS = new Set<SearchOrder>(["asc", "desc"]);
 
-export const PER_PAGE = 30;
+export const PER_PAGE_OPTIONS = [10, 30, 50, 100] as const;
+export const DEFAULT_PER_PAGE = 30;
+
+function normalizePerPage(raw: string | null): number {
+  const n = Number(raw);
+  return (PER_PAGE_OPTIONS as readonly number[]).includes(n) ? n : DEFAULT_PER_PAGE;
+}
 
 /**
  * URL ↔ 検索状態の同期。URL を真実の源とする。
@@ -31,7 +37,7 @@ export function useRepoSearchQuery() {
           ? (orderRaw as SearchOrder)
           : undefined,
       page: Number.isFinite(page) && page > 0 ? page : 1,
-      perPage: PER_PAGE,
+      perPage: normalizePerPage(sp.get("perPage")),
     };
   }, [sp]);
 
@@ -49,6 +55,11 @@ export function useRepoSearchQuery() {
       setOrDelete(usp, "sort", merged.sort);
       setOrDelete(usp, "order", merged.order);
       setOrDelete(usp, "page", merged.page > 1 ? String(merged.page) : "");
+      setOrDelete(
+        usp,
+        "perPage",
+        merged.perPage !== DEFAULT_PER_PAGE ? String(merged.perPage) : "",
+      );
 
       const qs = usp.toString();
       router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });

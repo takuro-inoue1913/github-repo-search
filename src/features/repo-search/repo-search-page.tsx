@@ -24,6 +24,7 @@ export function RepoSearchPage() {
           language={params.language}
           sort={params.sort}
           order={params.order}
+          perPage={params.perPage}
           onChange={(next) => update(next, { resetPage: true })}
         />
       </section>
@@ -44,8 +45,10 @@ export function RepoSearchPage() {
     if (query.isError) {
       return <ErrorState error={query.error} onRetry={() => query.refetch()} />;
     }
-    if (query.isPending) {
-      return <SkeletonList count={6} />;
+    // 初回検索、もしくは検索条件 (q/language/sort/order/perPage) 変更で前データが
+    // プレースホルダ扱いになっている間はスケルトンを出す。ページ送りでは前データを保持。
+    if (query.isPending || query.isPlaceholderData) {
+      return <SkeletonList count={Math.min(params.perPage, 6)} />;
     }
     const data = query.data;
     if (data.items.length === 0) {
