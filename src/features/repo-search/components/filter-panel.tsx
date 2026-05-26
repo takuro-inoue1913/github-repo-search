@@ -37,7 +37,7 @@ export function FilterPanel({ language, sort, order, onChange }: Props) {
           onChange={(e) =>
             onChange({ language: e.target.value ? e.target.value : undefined })
           }
-          className="rounded-md border border-neutral-300 bg-white px-2 py-1.5 text-sm"
+          className="rounded-md border border-neutral-300 bg-white px-2 py-1.5 text-sm text-neutral-900"
         >
           <option value="">すべて</option>
           {LANGUAGES.map((lang) => (
@@ -56,7 +56,7 @@ export function FilterPanel({ language, sort, order, onChange }: Props) {
           id="filter-sort"
           value={sort ?? "best-match"}
           onChange={(e) => onChange({ sort: e.target.value as SearchSort })}
-          className="rounded-md border border-neutral-300 bg-white px-2 py-1.5 text-sm"
+          className="rounded-md border border-neutral-300 bg-white px-2 py-1.5 text-sm text-neutral-900"
         >
           <option value="best-match">関連度</option>
           <option value="stars">スター数</option>
@@ -74,7 +74,7 @@ export function FilterPanel({ language, sort, order, onChange }: Props) {
           value={order ?? "desc"}
           onChange={(e) => onChange({ order: e.target.value as SearchOrder })}
           disabled={!sort || sort === "best-match"}
-          className="rounded-md border border-neutral-300 bg-white px-2 py-1.5 text-sm disabled:bg-neutral-100 disabled:text-neutral-400"
+          className="rounded-md border border-neutral-300 bg-white px-2 py-1.5 text-sm text-neutral-900 disabled:bg-neutral-100 disabled:text-neutral-400"
         >
           <option value="desc">降順</option>
           <option value="asc">昇順</option>

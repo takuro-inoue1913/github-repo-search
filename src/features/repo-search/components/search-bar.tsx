@@ -34,7 +34,7 @@ function SearchBarInner({ defaultValue, onSubmit }: Props) {
         onChange={(e) => setValue(e.target.value)}
         placeholder="例: next.js, react state management"
         autoComplete="off"
-        className="flex-1 rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-300"
+        className="flex-1 rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-300"
       />
       <button
         type="submit"
