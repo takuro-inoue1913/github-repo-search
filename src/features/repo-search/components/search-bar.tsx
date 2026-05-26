@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 
 type Props = {
   defaultValue: string;
@@ -8,12 +8,12 @@ type Props = {
 };
 
 export function SearchBar({ defaultValue, onSubmit }: Props) {
-  const [value, setValue] = useState(defaultValue);
+  // `defaultValue` を key にすることで、URL 由来の値が変わった場合に input を再生成して同期する
+  return <SearchBarInner key={defaultValue} defaultValue={defaultValue} onSubmit={onSubmit} />;
+}
 
-  // URL → 入力欄への片方向同期(他から URL が書き換えられた場合に追従)
-  useEffect(() => {
-    setValue(defaultValue);
-  }, [defaultValue]);
+function SearchBarInner({ defaultValue, onSubmit }: Props) {
+  const [value, setValue] = useState(defaultValue);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
