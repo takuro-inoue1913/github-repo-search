@@ -367,6 +367,13 @@ CI(GitHub Actions)で `format:check / lint / typecheck / unit-test / build / e2e
 - 日付: `Intl.RelativeTimeFormat` で「3 日前」、それ以上は `Intl.DateTimeFormat` で日付表示。
 - 数値: `Intl.NumberFormat` で `1,234`、1,000 以上は `compact` 表記で `1.2万` 等に。
 
+**dayjs / date-fns ではなく `Intl` を採用した理由**:
+
+- **依存ゼロ**: ブラウザ・Node に標準搭載。バンドルサイズ増加なし。
+- **i18n が無料**: ロケール差し替えで他言語へ移行できる(`dayjs` は locale を都度 import する必要がある)。
+- **用途が局所的**: 「更新日の相対表記」と「件数の短縮表記」の 2 ヶ所に閉じており、ライブラリ導入コストに見合わない。
+- **判断の更新条件**: 日付演算(加算・差分・タイムゾーン変換)をアプリ全体で多用するようになる / 「N か月前」「来週」のような表現分岐が増えて `lib/format.ts` が肥大化する、いずれかが満たされた段階で `dayjs` または `date-fns` への移行を検討する。
+
 ### 観測性(注入点)
 
 - Error Boundary でクライアントエラーを集約できる構造。
