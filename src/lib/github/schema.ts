@@ -1,9 +1,24 @@
 import { z } from "zod";
 
+/**
+ * GitHub REST API のレスポンスに対する zod スキーマ。
+ * 本アプリで使うフィールドのみを抜粋している(完全網羅ではない)。
+ *
+ * 一次情報:
+ * - REST API バージョン: 2022-11-28 (X-GitHub-Api-Version)
+ * - Search repositories: https://docs.github.com/en/rest/search/search#search-repositories
+ * - Get a repository:    https://docs.github.com/en/rest/repos/repos#get-a-repository
+ * - 機械可読仕様 (OpenAPI): https://github.com/github/rest-api-description
+ *
+ * 互換性方針:
+ * - `.strict()` は付けない。GitHub 側のフィールド追加で破綻させないため、未知フィールドは無視する。
+ * - 既知フィールドの型変更は parse 時に例外となり、`lib/errors.ts` の境界で UI に到達させない。
+ */
+
 export const ownerSchema = z.object({
   login: z.string(),
-  avatar_url: z.string().url(),
-  html_url: z.string().url(),
+  avatar_url: z.url(),
+  html_url: z.url(),
 });
 
 export const repositorySummarySchema = z.object({
@@ -14,7 +29,7 @@ export const repositorySummarySchema = z.object({
   language: z.string().nullable(),
   stargazers_count: z.number(),
   updated_at: z.string(),
-  html_url: z.string().url(),
+  html_url: z.url(),
   owner: ownerSchema,
 });
 
