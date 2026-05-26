@@ -34,14 +34,7 @@ export function RepoSearchPage() {
   );
 
   function renderBody() {
-    if (!params.q.trim()) {
-      return (
-        <EmptyState
-          title="キーワードを入力してください"
-          description="リポジトリ名・説明文・トピックを横断的に検索できます。"
-        />
-      );
-    }
+    if (!params.q.trim()) return null;
     if (query.isError) {
       return <ErrorState error={query.error} onRetry={() => query.refetch()} />;
     }

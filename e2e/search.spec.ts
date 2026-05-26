@@ -48,11 +48,10 @@ test.describe("検索 → 詳細遷移 (Happy Path)", () => {
     await page.route("**/api/github/repos/**", json(detailPayload));
   });
 
-  test("初期表示は idle 状態の空状態を出す", async ({ page }) => {
+  test("初期表示では結果領域に何も描画されない (idle)", async ({ page }) => {
     await page.goto("/");
-    await expect(
-      page.getByText("キーワードを入力してください"),
-    ).toBeVisible();
+    await expect(page.getByRole("searchbox", { name: "リポジトリを検索" })).toBeVisible();
+    await expect(page.getByText("facebook/react")).toHaveCount(0);
   });
 
   test("キーワード検索 → 結果表示 → 詳細遷移 → Stats 表示", async ({ page }) => {

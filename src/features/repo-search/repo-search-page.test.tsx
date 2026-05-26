@@ -14,12 +14,11 @@ vi.mock("next/navigation", () => ({
 import { RepoSearchPage } from "./repo-search-page";
 
 describe("RepoSearchPage", () => {
-  it("クエリ未入力では初期状態の空状態を表示する (idle)", () => {
+  it("クエリ未入力では結果領域を描画しない (idle)", () => {
     searchParams.delete("q");
     renderWithQuery(<RepoSearchPage />);
-    expect(
-      screen.getByText("キーワードを入力してください"),
-    ).toBeInTheDocument();
+    expect(screen.queryByRole("list", { name: "検索結果" })).not.toBeInTheDocument();
+    expect(screen.queryByText("facebook/react")).not.toBeInTheDocument();
   });
 
   it("ヒット 0 件で empty を表示する", async () => {
