@@ -8,7 +8,7 @@ const SORTS = new Set<SearchSort>(["stars", "forks", "updated", "best-match"]);
 const ORDERS = new Set<SearchOrder>(["asc", "desc"]);
 
 export const PER_PAGE_OPTIONS = [10, 30, 50, 100] as const;
-export const DEFAULT_PER_PAGE = 30;
+export const DEFAULT_PER_PAGE = 10;
 
 function normalizePerPage(raw: string | null): number {
   const n = Number(raw);
