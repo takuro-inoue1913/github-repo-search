@@ -50,30 +50,30 @@ pnpm dev
 
 ### スクリプト
 
-| コマンド | 内容 |
-|---|---|
-| `pnpm dev` | 開発サーバー起動 |
-| `pnpm build` | 本番ビルド |
-| `pnpm start` | 本番起動 |
-| `pnpm lint` | ESLint |
-| `pnpm typecheck` | TypeScript 型チェック |
-| `pnpm test` | Vitest(単体・コンポーネント) |
-| `pnpm test:e2e` | Playwright(E2E) |
-| `pnpm format` | Prettier |
+| コマンド         | 内容                         |
+| ---------------- | ---------------------------- |
+| `pnpm dev`       | 開発サーバー起動             |
+| `pnpm build`     | 本番ビルド                   |
+| `pnpm start`     | 本番起動                     |
+| `pnpm lint`      | ESLint                       |
+| `pnpm typecheck` | TypeScript 型チェック        |
+| `pnpm test`      | Vitest(単体・コンポーネント) |
+| `pnpm test:e2e`  | Playwright(E2E)              |
+| `pnpm format`    | Prettier                     |
 
 ---
 
 ## 技術スタックと採用理由
 
-| 技術 | 採用理由 | 不採用案 |
-|---|---|---|
-| **Next.js 16 (App Router)** | 課題指定。Server / Client の境界を明示でき、Route Handler で API プロキシが書ける | Pages Router: 課題指定外 |
-| **TanStack Query** | キャッシュ・状態分岐・refetch を標準化、queryKey で URL と整合 | SWR: 同等だが `setQueryData` 等のリッチさで採用 |
-| **URL を真実の源** (`useSearchParams`) | リロード/共有/履歴に強い | Zustand: URL と二重管理で破綻リスク |
-| **zod** | レスポンスを境界で検証し UI に不正データを到達させない | 検証なし: プロダクション想定として弱い |
-| **shadcn/ui + Tailwind** | コピペで持ち込め、依存が膨らまない | MUI: 重く、デザインカスタマイズの自由度が落ちる |
-| **MSW** | コンポーネント/E2E で同一ハンドラを使い回せる | jest.mock: ネットワーク層をモックする方が現実的 |
-| **Vitest** | Vite と統合され高速、Jest 互換 API | Jest: 設定が重い |
+| 技術                                   | 採用理由                                                                          | 不採用案                                        |
+| -------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------------- |
+| **Next.js 16 (App Router)**            | 課題指定。Server / Client の境界を明示でき、Route Handler で API プロキシが書ける | Pages Router: 課題指定外                        |
+| **TanStack Query**                     | キャッシュ・状態分岐・refetch を標準化、queryKey で URL と整合                    | SWR: 同等だが `setQueryData` 等のリッチさで採用 |
+| **URL を真実の源** (`useSearchParams`) | リロード/共有/履歴に強い                                                          | Zustand: URL と二重管理で破綻リスク             |
+| **zod**                                | レスポンスを境界で検証し UI に不正データを到達させない                            | 検証なし: プロダクション想定として弱い          |
+| **shadcn/ui + Tailwind**               | コピペで持ち込め、依存が膨らまない                                                | MUI: 重く、デザインカスタマイズの自由度が落ちる |
+| **MSW**                                | コンポーネント/E2E で同一ハンドラを使い回せる                                     | jest.mock: ネットワーク層をモックする方が現実的 |
+| **Vitest**                             | Vite と統合され高速、Jest 互換 API                                                | Jest: 設定が重い                                |
 
 ---
 
@@ -112,23 +112,23 @@ ui/states/             Loading / Error / Empty の共通コンポーネント
 
 ## 状態管理方針
 
-| 種別 | 対象 | 管理場所 |
-|---|---|---|
-| サーバー状態 | 検索結果 / 詳細 | TanStack Query |
+| 種別                       | 対象                                        | 管理場所                             |
+| -------------------------- | ------------------------------------------- | ------------------------------------ |
+| サーバー状態               | 検索結果 / 詳細                             | TanStack Query                       |
 | URL 由来のクライアント状態 | キーワード / language / sort / order / page | `useSearchParams` + `router.replace` |
-| 純粋なローカル UI 状態 | 入力途中の値, Popover 開閉 | `useState` |
+| 純粋なローカル UI 状態     | 入力途中の値, Popover 開閉                  | `useState`                           |
 
 ---
 
 ## エラーハンドリング
 
-| エラー型 | きっかけ | UI 挙動 |
-|---|---|---|
-| `ValidationError` | 空クエリで送信 | フォームで弾く |
-| `RateLimitError` | 403 + `X-RateLimit-Remaining: 0` | リセット時刻を表示、ボタン disabled |
-| `NotFoundError` | 404 | 詳細で `notFound()` |
-| `NetworkError` / 5xx | ネット断・サーバー障害 | `<ErrorState onRetry>` + 指数バックオフで自動 retry(最大 2 回) |
-| `UnknownError` | その他 | エラー境界で `digest` 表示 |
+| エラー型             | きっかけ                         | UI 挙動                                                        |
+| -------------------- | -------------------------------- | -------------------------------------------------------------- |
+| `ValidationError`    | 空クエリで送信                   | フォームで弾く                                                 |
+| `RateLimitError`     | 403 + `X-RateLimit-Remaining: 0` | リセット時刻を表示、ボタン disabled                            |
+| `NotFoundError`      | 404                              | 詳細で `notFound()`                                            |
+| `NetworkError` / 5xx | ネット断・サーバー障害           | `<ErrorState onRetry>` + 指数バックオフで自動 retry(最大 2 回) |
+| `UnknownError`       | その他                           | エラー境界で `digest` 表示                                     |
 
 ---
 
@@ -186,13 +186,13 @@ ui/states/             Loading / Error / Empty の共通コンポーネント
 
 ### フェーズ分けでの活用
 
-| フェーズ | AI に任せたこと | 人間が判断したこと |
-|---|---|---|
-| 要件理解 | 課題 URL の要約抽出 | 評価軸の重み付け |
-| 設計 | DESIGN.md のドラフト生成、選択肢の比較表 | アーキテクチャ判断(API 隠蔽、URL を真実の源とする方針、状態管理の三層分離) |
-| README | 構成案の生成、技術選定の対比表 | 採用理由・不採用案の最終判断、スコープ判断の境界 |
-| 実装 | ボイラープレート、コンポーネント雛形、型定義、テストコード生成 | API 境界(`lib/github/`)の設計、エラー型の分類、レビュー判断 |
-| テスト | テストケースのひな形 | 何を担保するかの選定、MSW ハンドラの境界設計 |
+| フェーズ | AI に任せたこと                                                | 人間が判断したこと                                                         |
+| -------- | -------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| 要件理解 | 課題 URL の要約抽出                                            | 評価軸の重み付け                                                           |
+| 設計     | DESIGN.md のドラフト生成、選択肢の比較表                       | アーキテクチャ判断(API 隠蔽、URL を真実の源とする方針、状態管理の三層分離) |
+| README   | 構成案の生成、技術選定の対比表                                 | 採用理由・不採用案の最終判断、スコープ判断の境界                           |
+| 実装     | ボイラープレート、コンポーネント雛形、型定義、テストコード生成 | API 境界(`lib/github/`)の設計、エラー型の分類、レビュー判断                |
+| テスト   | テストケースのひな形                                           | 何を担保するかの選定、MSW ハンドラの境界設計                               |
 
 ### プロンプトの工夫
 
@@ -203,6 +203,7 @@ ui/states/             Loading / Error / Empty の共通コンポーネント
 ### 採用しなかった AI 提案の例
 
 <!-- 実装フェーズで発生したものを追記 -->
+
 - (例)`watchers_count` を Watchers として使う初期案 → 実態は subscribers のため `subscribers_count` に変更
 - (例)状態管理に Zustand を勧める提案 → URL を真実の源とする方針と衝突するため不採用
 

@@ -14,9 +14,7 @@ export function RepoHeader({ repo }: { repo: Repository }) {
           </span>
         )}
       </div>
-      {repo.description && (
-        <p className="text-sm text-neutral-600">{repo.description}</p>
-      )}
+      {repo.description && <p className="text-sm text-neutral-600">{repo.description}</p>}
       <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-500">
         <a
           href={repo.htmlUrl}

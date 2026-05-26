@@ -84,7 +84,10 @@ test.describe("検索 → 詳細遷移 (Happy Path)", () => {
 
     await expect(page.getByText("facebook/react").first()).toBeVisible();
     // 結果カード(リンク)にフォーカスして Enter で遷移
-    await page.getByRole("link", { name: /facebook\/react/ }).first().focus();
+    await page
+      .getByRole("link", { name: /facebook\/react/ })
+      .first()
+      .focus();
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(/\/repositories\/facebook\/react/);
   });

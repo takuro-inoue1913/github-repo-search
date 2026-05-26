@@ -28,8 +28,7 @@ export function Pagination({ page, perPage, totalCount, onChange }: Props) {
       aria-label="ページネーション"
     >
       <p className="text-xs text-neutral-600">
-        {formatNumber(totalCount)} 件中 {formatNumber((page - 1) * perPage + 1)} -
-        {" "}
+        {formatNumber(totalCount)} 件中 {formatNumber((page - 1) * perPage + 1)} -{" "}
         {formatNumber(Math.min(page * perPage, effectiveTotal))} 件目
         {cappedNote && <span className="ml-2 text-neutral-400">{cappedNote}</span>}
       </p>

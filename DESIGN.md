@@ -93,24 +93,24 @@ src/
 
 ### 2.1 検索画面 (`/`)
 
-| コンポーネント | 責務 | 主な Props |
-|---|---|---|
-| `RepoSearchPage` (page.tsx) | 画面状態の取りまとめ。URL → state → fetch → state-branching | なし(URL から hook 経由で読む) |
-| `SearchBar` | キーワード入力 + debounce。送信時に URL を更新するだけ。 | `defaultValue: string`, `onSubmit: (q: string) => void` |
-| `FilterPanel` | language / sort / order の選択。値は URL に反映。 | `value: SearchParams`, `onChange: (next) => void` |
-| `RepoList` | 結果配列の繰り返し描画のみ。状態分岐は持たない。 | `items: RepositorySummary[]` |
-| `RepoListItem` | 1 件のカード。`Link` で詳細へ。 | `repo: RepositorySummary` |
-| `Pagination` | ページ送り(GitHub は最大 1000 件) | `page`, `totalCount`, `perPage`, `onChange` |
-| `<Loading/> <ErrorState/> <EmptyState/>` | 共通の状態表示 | `message?`, `onRetry?` |
+| コンポーネント                           | 責務                                                        | 主な Props                                              |
+| ---------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------- |
+| `RepoSearchPage` (page.tsx)              | 画面状態の取りまとめ。URL → state → fetch → state-branching | なし(URL から hook 経由で読む)                          |
+| `SearchBar`                              | キーワード入力 + debounce。送信時に URL を更新するだけ。    | `defaultValue: string`, `onSubmit: (q: string) => void` |
+| `FilterPanel`                            | language / sort / order の選択。値は URL に反映。           | `value: SearchParams`, `onChange: (next) => void`       |
+| `RepoList`                               | 結果配列の繰り返し描画のみ。状態分岐は持たない。            | `items: RepositorySummary[]`                            |
+| `RepoListItem`                           | 1 件のカード。`Link` で詳細へ。                             | `repo: RepositorySummary`                               |
+| `Pagination`                             | ページ送り(GitHub は最大 1000 件)                           | `page`, `totalCount`, `perPage`, `onChange`             |
+| `<Loading/> <ErrorState/> <EmptyState/>` | 共通の状態表示                                              | `message?`, `onRetry?`                                  |
 
 ### 2.2 詳細画面 (`/repositories/[owner]/[name]`)
 
-| コンポーネント | 責務 | Props |
-|---|---|---|
-| `RepoDetailPage` | fetch・状態分岐 | URL params |
-| `RepoHeader` | name / description / owner avatar / language バッジ | `repo: Repository` |
-| `RepoStats` | stars / watchers / forks / issues を 4 枚のカードで表示 | `repo: Repository` |
-| `OwnerBadge` | アバター + ログイン名 + プロフィールリンク | `owner: Owner` |
+| コンポーネント   | 責務                                                    | Props              |
+| ---------------- | ------------------------------------------------------- | ------------------ |
+| `RepoDetailPage` | fetch・状態分岐                                         | URL params         |
+| `RepoHeader`     | name / description / owner avatar / language バッジ     | `repo: Repository` |
+| `RepoStats`      | stars / watchers / forks / issues を 4 枚のカードで表示 | `repo: Repository` |
+| `OwnerBadge`     | アバター + ログイン名 + プロフィールリンク              | `owner: Owner`     |
 
 ### 2.3 責務の分離方針
 
@@ -122,16 +122,18 @@ src/
 
 ## 3. 状態管理
 
-| 種別 | 何を | どこで管理 | 理由 |
-|---|---|---|---|
-| サーバー状態 | 検索結果 / 詳細 | **TanStack Query** | キャッシュ、再取得、ローディング/エラー状態管理を自前で書かない。queryKey で URL パラメータと整合させる |
-| URL 由来のクライアント状態 | キーワード, language, sort, order, page | **Next.js `useSearchParams` + `router.replace`** | リロード耐性・共有可能性・戻る進む対応。Zustand 等の余分な store は不要 |
-| 純粋なローカル UI 状態 | input の編集中値、Popover の開閉 | **`useState`** | スコープが狭く永続不要 |
+| 種別                       | 何を                                    | どこで管理                                       | 理由                                                                                                    |
+| -------------------------- | --------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| サーバー状態               | 検索結果 / 詳細                         | **TanStack Query**                               | キャッシュ、再取得、ローディング/エラー状態管理を自前で書かない。queryKey で URL パラメータと整合させる |
+| URL 由来のクライアント状態 | キーワード, language, sort, order, page | **Next.js `useSearchParams` + `router.replace`** | リロード耐性・共有可能性・戻る進む対応。Zustand 等の余分な store は不要                                 |
+| 純粋なローカル UI 状態     | input の編集中値、Popover の開閉        | **`useState`**                                   | スコープが狭く永続不要                                                                                  |
 
 **queryKey 設計**:
+
 ```ts
-['repos', 'search', { q, language, sort, order, page, perPage }]
-['repos', 'detail', { owner, name }]
+["repos", "search", { q, language, sort, order, page, perPage }][
+  ("repos", "detail", { owner, name })
+];
 ```
 
 URL の検索パラメータをそのまま key に使うことで、URL を真実の源とし、戻る/進むで自動的に別キャッシュが当たる構造にする。
@@ -148,11 +150,11 @@ export type RepositorySummary = {
   id: number;
   owner: { login: string; avatarUrl: string };
   name: string;
-  fullName: string;        // "owner/name"
+  fullName: string; // "owner/name"
   description: string | null;
   language: string | null;
   stargazersCount: number;
-  updatedAt: string;       // ISO
+  updatedAt: string; // ISO
 };
 
 export type Repository = RepositorySummary & {
@@ -166,10 +168,10 @@ export type Repository = RepositorySummary & {
 
 ### 4.2 エンドポイント
 
-| ユースケース | GitHub API | 備考 |
-|---|---|---|
-| 検索 | `GET https://api.github.com/search/repositories?q={q}+language:{lang}&sort={sort}&order={order}&page={page}&per_page=30` | 結果件数は最大 1000 件 / 認証なし: 10 req/min, トークン付き: 30 req/min |
-| 詳細 | `GET https://api.github.com/repos/{owner}/{name}` | `subscribers_count` を Watchers として扱う(GitHub の `watchers_count` は stars と同値のため) |
+| ユースケース | GitHub API                                                                                                               | 備考                                                                                         |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| 検索         | `GET https://api.github.com/search/repositories?q={q}+language:{lang}&sort={sort}&order={order}&page={page}&per_page=30` | 結果件数は最大 1000 件 / 認証なし: 10 req/min, トークン付き: 30 req/min                      |
+| 詳細         | `GET https://api.github.com/repos/{owner}/{name}`                                                                        | `subscribers_count` を Watchers として扱う(GitHub の `watchers_count` は stars と同値のため) |
 
 ### 4.3 リクエスト・レスポンス型
 
@@ -186,13 +188,13 @@ export type Repository = RepositorySummary & {
 
 `lib/errors.ts` で分類:
 
-| エラー | HTTP | UI 挙動 |
-|---|---|---|
-| `ValidationError` | クライアント側で `q` が空 | フォームで弾く |
-| `RateLimitError` | 403 + `X-RateLimit-Remaining: 0` | 「アクセス上限に達しました。`{reset}` 後に再試行できます」を表示、ボタンを `reset` まで disabled |
-| `NotFoundError` | 404 | 詳細ページで `notFound()` を呼び 404 画面へ |
-| `NetworkError` / 5xx | – | `<ErrorState onRetry>` で再試行 |
-| `UnknownError` | – | 同上 + Sentry 等送信(本番想定) |
+| エラー               | HTTP                             | UI 挙動                                                                                          |
+| -------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `ValidationError`    | クライアント側で `q` が空        | フォームで弾く                                                                                   |
+| `RateLimitError`     | 403 + `X-RateLimit-Remaining: 0` | 「アクセス上限に達しました。`{reset}` 後に再試行できます」を表示、ボタンを `reset` まで disabled |
+| `NotFoundError`      | 404                              | 詳細ページで `notFound()` を呼び 404 画面へ                                                      |
+| `NetworkError` / 5xx | –                                | `<ErrorState onRetry>` で再試行                                                                  |
+| `UnknownError`       | –                                | 同上 + Sentry 等送信(本番想定)                                                                   |
 
 `client.ts` で fetch ラッパが `Response` を見て上記の型付きエラーに変換し、Query の `error` に乗せる。UI は `instanceof` で分岐する。
 
@@ -229,8 +231,8 @@ export type Repository = RepositorySummary & {
 すべての fetch を行う画面で **明示的に 4 状態を分岐**する。
 
 ```tsx
-if (status === 'pending') return <Loading />;
-if (status === 'error')   return <ErrorState error={error} onRetry={refetch} />;
+if (status === "pending") return <Loading />;
+if (status === "error") return <ErrorState error={error} onRetry={refetch} />;
 if (data.items.length === 0) return <EmptyState query={q} />;
 return <RepoList items={data.items} />;
 ```
@@ -259,14 +261,14 @@ return <RepoList items={data.items} />;
 
 ## 8. 設計判断の言語化(なぜこの設計か)
 
-| 判断 | 採用理由 | 不採用案と理由 |
-|---|---|---|
-| App Router + Client Component 中心 | 検索 UI はインタラクション重視で TanStack Query の方が状態管理が素直 | 全 Server Component:URL → 再 SSR の往復が増え、debounce との相性が悪い |
-| TanStack Query | キャッシュ・状態分岐・refetch を標準化 | SWR でもよいが、`setQueryData` 等の API がリッチで詳細遷移の最適化がしやすい |
-| URL を真実の源 | リロード/共有/履歴に強く、評価観点の UX 配慮に直結 | Zustand 等の store:URL と二重管理になり破綻しやすい |
-| zod でレスポンス検証 | GitHub の仕様変更を fetch 層で検知でき、UI まで型崩れが波及しない | 検証なし:本番想定としては弱い |
-| `features/` 縦割り | 「リポジトリ検索」と「リポジトリ詳細」の関心を分離、機能追加(例: ユーザー検索)が縦に増やせる | `components/` の横割り:画面横断の責務が混じり拡張で破綻 |
-| Loading/Error/Empty を `ui/states/` で共通化 | 文言・スケルトンの一貫性、UX のばらつき防止 | 各画面で都度書く:評価軸「エッジケース配慮」を満たしにくい |
+| 判断                                         | 採用理由                                                                                     | 不採用案と理由                                                               |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| App Router + Client Component 中心           | 検索 UI はインタラクション重視で TanStack Query の方が状態管理が素直                         | 全 Server Component:URL → 再 SSR の往復が増え、debounce との相性が悪い       |
+| TanStack Query                               | キャッシュ・状態分岐・refetch を標準化                                                       | SWR でもよいが、`setQueryData` 等の API がリッチで詳細遷移の最適化がしやすい |
+| URL を真実の源                               | リロード/共有/履歴に強く、評価観点の UX 配慮に直結                                           | Zustand 等の store:URL と二重管理になり破綻しやすい                          |
+| zod でレスポンス検証                         | GitHub の仕様変更を fetch 層で検知でき、UI まで型崩れが波及しない                            | 検証なし:本番想定としては弱い                                                |
+| `features/` 縦割り                           | 「リポジトリ検索」と「リポジトリ詳細」の関心を分離、機能追加(例: ユーザー検索)が縦に増やせる | `components/` の横割り:画面横断の責務が混じり拡張で破綻                      |
+| Loading/Error/Empty を `ui/states/` で共通化 | 文言・スケルトンの一貫性、UX のばらつき防止                                                  | 各画面で都度書く:評価軸「エッジケース配慮」を満たしにくい                    |
 
 ---
 

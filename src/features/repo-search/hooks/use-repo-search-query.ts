@@ -31,7 +31,8 @@ export function useRepoSearchQuery() {
     return {
       q: sp.get("q") ?? "",
       language: sp.get("language") ?? undefined,
-      sort: sortRaw && SORTS.has(sortRaw as SearchSort) ? (sortRaw as SearchSort) : undefined,
+      sort:
+        sortRaw && SORTS.has(sortRaw as SearchSort) ? (sortRaw as SearchSort) : undefined,
       order:
         orderRaw && ORDERS.has(orderRaw as SearchOrder)
           ? (orderRaw as SearchOrder)

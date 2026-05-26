@@ -9,7 +9,9 @@ type Props = {
 
 export function SearchBar({ defaultValue, onSubmit }: Props) {
   // `defaultValue` を key にすることで、URL 由来の値が変わった場合に input を再生成して同期する
-  return <SearchBarInner key={defaultValue} defaultValue={defaultValue} onSubmit={onSubmit} />;
+  return (
+    <SearchBarInner key={defaultValue} defaultValue={defaultValue} onSubmit={onSubmit} />
+  );
 }
 
 function SearchBarInner({ defaultValue, onSubmit }: Props) {

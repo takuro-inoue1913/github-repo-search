@@ -44,10 +44,7 @@ describe("RepoSearchPage", () => {
     searchParams.set("q", "react");
     server.use(
       http.get("/api/github/search", () =>
-        HttpResponse.json(
-          { code: "upstream", message: "upstream" },
-          { status: 502 },
-        ),
+        HttpResponse.json({ code: "upstream", message: "upstream" }, { status: 502 }),
       ),
     );
     renderWithQuery(<RepoSearchPage />);

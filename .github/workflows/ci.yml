@@ -15,7 +15,7 @@ env:
 
 jobs:
   static:
-    name: Lint & Typecheck & Unit Test
+    name: Format & Lint & Typecheck & Unit Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,6 +31,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test

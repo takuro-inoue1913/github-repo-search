@@ -22,10 +22,7 @@ describe("api-client", () => {
   it("400 → ValidationError", async () => {
     server.use(
       http.get("/api/github/search", () =>
-        HttpResponse.json(
-          { code: "validation", message: "bad" },
-          { status: 400 },
-        ),
+        HttpResponse.json({ code: "validation", message: "bad" }, { status: 400 }),
       ),
     );
     await expect(
@@ -36,10 +33,7 @@ describe("api-client", () => {
   it("404 → NotFoundError", async () => {
     server.use(
       http.get("/api/github/repos/:o/:n", () =>
-        HttpResponse.json(
-          { code: "not_found", message: "no" },
-          { status: 404 },
-        ),
+        HttpResponse.json({ code: "not_found", message: "no" }, { status: 404 }),
       ),
     );
     await expect(fetchRepository("x", "y")).rejects.toBeInstanceOf(NotFoundError);
@@ -66,10 +60,7 @@ describe("api-client", () => {
   it("502 → UnknownApiError", async () => {
     server.use(
       http.get("/api/github/search", () =>
-        HttpResponse.json(
-          { code: "upstream", message: "upstream" },
-          { status: 502 },
-        ),
+        HttpResponse.json({ code: "upstream", message: "upstream" }, { status: 502 }),
       ),
     );
     await expect(

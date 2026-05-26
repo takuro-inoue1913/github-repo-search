@@ -35,7 +35,5 @@ export const sampleRepository: Repository = {
 
 export const handlers = [
   http.get("/api/github/search", () => HttpResponse.json(sampleSearch)),
-  http.get("/api/github/repos/:owner/:name", () =>
-    HttpResponse.json(sampleRepository),
-  ),
+  http.get("/api/github/repos/:owner/:name", () => HttpResponse.json(sampleRepository)),
 ];
