@@ -1,17 +1,18 @@
 "use client";
 
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { NotFoundError } from "@/lib/errors";
 import { ErrorState, Loading } from "@/ui/states";
 import { useRepoDetail } from "./hooks/use-repo-detail";
 import { RepoHeader } from "./components/repo-header";
 import { RepoStats } from "./components/repo-stats";
+import { BackToSearchButton } from "./components/back-to-search-button";
 
 type Props = { owner: string; name: string };
 
 export function RepoDetailPage({ owner, name }: Props) {
   const query = useRepoDetail(owner, name);
+  const router = useRouter();
 
   if (query.isError) {
     if (query.error instanceof NotFoundError) {
@@ -26,9 +27,7 @@ export function RepoDetailPage({ owner, name }: Props) {
   const repo = query.data;
   return (
     <div className="flex flex-col gap-6">
-      <Link href="/" className="text-xs text-neutral-500 hover:text-neutral-900">
-        ← 検索に戻る
-      </Link>
+      <BackToSearchButton onBack={() => router.back()} />
       <RepoHeader repo={repo} />
       <RepoStats repo={repo} />
     </div>
